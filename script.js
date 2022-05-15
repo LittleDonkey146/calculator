@@ -1,3 +1,7 @@
+let firstNum = 0;
+let secondNum = 0;
+let operatorSymbol = ' ';
+
 const getNumber = document.querySelectorAll('[number]');
 const getOperator = document.querySelectorAll('[operator]');
 const currentResult = document.querySelector('.active-results');
@@ -13,14 +17,15 @@ pointBtn.addEventListener('click', pointFunc);
 equalBtn.addEventListener('click', mathsFunc);
 
 getNumber.forEach(button => { 
-    button.addEventListener('click', () => currentResult.textContent += button.textContent) });
-
+    button.addEventListener('click', () => [currentResult.textContent += button.textContent, checkNum(button.textContent, button.textContent)]) });
 getOperator.forEach(operator => { 
-    operator.addEventListener('click', () => currentResult.textContent += operator.textContent) });
-
+    operator.addEventListener('click', () => [currentResult.textContent += operator.textContent, operatorSymbol = operator.textContent, pastResult.textContent = currentResult.textContent]) });
 
 function clearFunc() {
-    [currentResult.textContent = ' ', pastResult.textContent = ' '];
+    firstNum = 0;
+    secondNum = 0;
+    operatorSymbol = ' ';
+    [currentResult.textContent = '', pastResult.textContent = ''];
 }
 
 function deleteFunc() {
@@ -32,7 +37,18 @@ function pointFunc() {
 }
 
 function mathsFunc() {
-    pastResult.textContent = operate();
+    pastResult.textContent = currentResult.textContent;
+    currentResult.textContent = operate(operatorSymbol, firstNum, secondNum);
+    firstNum = currentResult.textContent;
+    secondNum = 0;
+}
+
+function checkNum(a, b) {
+    if(operatorSymbol == ' ' ) {
+        firstNum += a;
+    } else {
+        secondNum += b;
+    }
 }
 
 function add(a, b) {
@@ -48,22 +64,20 @@ function multiply(a, b) {
 }
 
 function divide(a, b) {
- return a / b;
+    return a / b;
 }
 
 function operate(operator, a, b) {
+    a = +firstNum;
+    b = +secondNum;
     switch(operator) {
         case '+':
-            add(a, b);
-            break;
+            return add(a, b);
         case '-':
-            subtract(a, b);
-            break;
+            return subtract(a, b);
         case '÷':
-            divide(a, b);
-            break;
-        case '*':
-            multiply(a, b);
-            break;
+            return divide(a, b);
+        case '×':
+            return multiply(a, b);
     }
 }
