@@ -33,7 +33,8 @@ function backToBackMaths(operation) {
     }
     firstNum = currentResult.textContent;
     operatorSymbol = operation;
-    pastResult.textContent = `${firstNum} ${operation}`;
+
+    if(secondNum !== '0') pastResult.textContent = `${firstNum} ${operation}`;
 }
 
 function clearFunc() {
@@ -57,7 +58,7 @@ function equalFunc() {
         pastResult.textContent = '';
         return;
     }
-    currentResult.textContent = operate(operatorSymbol, firstNum, secondNum);
+    currentResult.textContent = Math.round(operate(operatorSymbol, firstNum, secondNum));
     pastResult.textContent = `${firstNum} ${operatorSymbol} ${secondNum} =`;
     firstNum = currentResult.textContent;
     secondNum = '';
