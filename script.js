@@ -1,6 +1,6 @@
-let firstNum = 0;
-let secondNum = 0;
-let operatorSymbol = ' ';
+let firstNum = '';
+let secondNum = '';
+let operatorSymbol = '';
 
 const getNumber = document.querySelectorAll('[number]');
 const getOperator = document.querySelectorAll('[operator]');
@@ -14,17 +14,32 @@ const equalBtn = document.getElementById('equal-btn');
 clearBtn.addEventListener('click', clearFunc);
 deleteBtn.addEventListener('click', deleteFunc);
 pointBtn.addEventListener('click', pointFunc);
-equalBtn.addEventListener('click', mathsFunc);
+equalBtn.addEventListener('click', equalFunc);
 
 getNumber.forEach(button => { 
-    button.addEventListener('click', () => [currentResult.textContent += button.textContent, checkNum(button.textContent, button.textContent)]) });
+    button.addEventListener('click', () => [ 
+        checkNum(button.textContent, button.textContent)
+    ]) });
 getOperator.forEach(operator => { 
-    operator.addEventListener('click', () => [currentResult.textContent += operator.textContent, operatorSymbol = operator.textContent, pastResult.textContent = currentResult.textContent]) });
+    operator.addEventListener('click', () => [
+         backToBackMaths(operator.textContent),
+    ]) });
+
+function backToBackMaths(operation) {
+    
+    if(operatorSymbol != '')
+    {
+        equalFunc();
+    }
+    firstNum = currentResult.textContent;
+    operatorSymbol = operation;
+    pastResult.textContent = `${firstNum} ${operation}`;
+}
 
 function clearFunc() {
-    firstNum = 0;
-    secondNum = 0;
-    operatorSymbol = ' ';
+    firstNum = '';
+    secondNum = '';
+    operatorSymbol = '';
     [currentResult.textContent = '', pastResult.textContent = ''];
 }
 
@@ -36,18 +51,26 @@ function pointFunc() {
     currentResult.textContent += '.';
 }
 
-function mathsFunc() {
-    pastResult.textContent = currentResult.textContent;
+function equalFunc() {
+    if(operatorSymbol === '÷' && secondNum === '0') {
+        currentResult.textContent = 'WHAT ARE YOU TRYING TO DO THERE?';
+        pastResult.textContent = '';
+        return;
+    }
     currentResult.textContent = operate(operatorSymbol, firstNum, secondNum);
+    pastResult.textContent = `${firstNum} ${operatorSymbol} ${secondNum} =`;
     firstNum = currentResult.textContent;
-    secondNum = 0;
+    secondNum = '';
 }
 
 function checkNum(a, b) {
-    if(operatorSymbol == ' ' ) {
+    if(operatorSymbol == '' ) {
         firstNum += a;
+        currentResult.textContent = firstNum;
     } else {
         secondNum += b;
+        firstNum.textContent = currentResult.textContent;
+        currentResult.textContent = secondNum;
     }
 }
 
