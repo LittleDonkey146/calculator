@@ -1,6 +1,7 @@
 let firstNum = '';
 let secondNum = '';
 let operatorSymbol = '';
+let pointer = false;
 
 const getNumber = document.querySelectorAll('[number]');
 const getOperator = document.querySelectorAll('[operator]');
@@ -18,11 +19,11 @@ equalBtn.addEventListener('click', equalFunc);
 
 getNumber.forEach(button => { 
     button.addEventListener('click', () => [ 
-        checkNum(button.textContent, button.textContent)
+        checkNum(button.textContent, button.textContent),
     ]) });
 getOperator.forEach(operator => { 
     operator.addEventListener('click', () => [
-         backToBackMaths(operator.textContent),
+         backToBackMaths(operator.textContent),        
     ]) });
 
 function backToBackMaths(operation) {
@@ -33,7 +34,7 @@ function backToBackMaths(operation) {
     }
     firstNum = currentResult.textContent;
     operatorSymbol = operation;
-
+    pointer = false;
     if(secondNum !== '0') pastResult.textContent = `${firstNum} ${operation}`;
 }
 
@@ -41,6 +42,7 @@ function clearFunc() {
     firstNum = '';
     secondNum = '';
     operatorSymbol = '';
+    pointer = false;
     [currentResult.textContent = '', pastResult.textContent = ''];
 }
 
@@ -49,7 +51,17 @@ function deleteFunc() {
 }
 
 function pointFunc() {
-    currentResult.textContent += '.';
+    if(pointer === false) {
+        if(operatorSymbol == '' ) {
+            firstNum += '.';
+            currentResult.textContent = firstNum;
+        } else {
+            secondNum += '.';
+            firstNum.textContent = currentResult.textContent;
+            currentResult.textContent = secondNum;
+        }
+        pointer = true;
+    }
 }
 
 function equalFunc() {
@@ -58,10 +70,11 @@ function equalFunc() {
         pastResult.textContent = '';
         return;
     }
-    currentResult.textContent = Math.round(operate(operatorSymbol, firstNum, secondNum));
+    currentResult.textContent = Math.round((operate(operatorSymbol, firstNum, secondNum) * 1000)) / 1000;
     pastResult.textContent = `${firstNum} ${operatorSymbol} ${secondNum} =`;
     firstNum = currentResult.textContent;
     secondNum = '';
+    pointer = false;
 }
 
 function checkNum(a, b) {
